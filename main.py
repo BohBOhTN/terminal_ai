@@ -43,7 +43,7 @@ def interact_with_ai(conversation_id=None):
         try:
             # Call the OpenAI API to get a response
             response = client.chat.completions.create(
-                model="gpt-4",  # Ensure correct model name
+                model="gpt-3.5-turbo",  # Ensure correct model name
                 messages=conversation,  # Pass the conversation history here
                 temperature=1,
                 max_tokens=2048,
@@ -51,22 +51,18 @@ def interact_with_ai(conversation_id=None):
                 frequency_penalty=0,
                 presence_penalty=0
             )
-
             # Extract the AI's response from the response object
             ai_response = response.choices[0].message.content.strip()
             print(f"AI: {ai_response}")
-
             # Add AI response to conversation history
             conversation.append({"role": "assistant", "content": ai_response})
+
+            # Save the conversation
+            save_conversation(conversation)
 
         except Exception as e:
             print(f"An error occurred: {e}")
             continue
-
-        # Ask user if they want to save the conversation
-        save = input("Do you want to save this conversation? (y/n): ")
-        if save.lower() == "y":
-            save_conversation(conversation)
 
 # Function to save conversation to the database
 def save_conversation(conversation):
